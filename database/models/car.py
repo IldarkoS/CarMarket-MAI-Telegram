@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, ForeignKey
+from sqlalchemy import Integer, ForeignKey, String
 from sqlalchemy.orm import mapped_column
 from database.models import Base
 
@@ -13,3 +13,4 @@ class Car(Base):
     id_condition = mapped_column(ForeignKey('car_condition.id_condition'), nullable=False)
     mileage = mapped_column(Integer, nullable=False)
     price = mapped_column(Integer, nullable=False)
+    owner_mobile = mapped_column(String, nullable=False)
