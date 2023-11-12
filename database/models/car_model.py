@@ -9,4 +9,3 @@ class CarModel(Base):
     id_model = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_mark = mapped_column(ForeignKey('car_mark.id_mark'), nullable=False)
     name_model = mapped_column(String(20), nullable=False)
-    year_release = mapped_column(SmallInteger, nullable=False)
