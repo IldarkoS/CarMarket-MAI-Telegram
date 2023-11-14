@@ -11,7 +11,7 @@ engine = create_engine(
         f"@{config.database.host}"
         f":{config.database.port}"
         f"/{config.database.name}",
-    echo=True
+    echo=False
 )
 
 Session = sessionmaker(bind=engine)

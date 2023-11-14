@@ -1,8 +1,14 @@
 from sqlalchemy import Integer, ForeignKey, String, SmallInteger
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import mapped_column, relationship, Mapped
+from database.models.car_colour import CarColour
+from database.models.car_condition import CarCondition
+from database.models.car_model import CarModel
+from database.models.car_engine import CarEngine
+from database.models.car_gearbox import CarGearbox
+from database.models.car_mark import CarMark
 from database.models import Base
 
-
+from database.session import Session
 class Car(Base):
     __tablename__ = "car"
 
@@ -16,3 +22,10 @@ class Car(Base):
     mileage = mapped_column(Integer, nullable=False)
     price = mapped_column(Integer, nullable=False)
     owner_mobile = mapped_column(String, nullable=False)
+    dir_photo = mapped_column(String, nullable=False)
+
+    colour: Mapped["CarColour"] = relationship(back_populates="cars")
+    condition: Mapped["CarCondition"] = relationship(back_populates="cars")
+    model: Mapped["CarModel"] = relationship(back_populates="cars")
+    engine: Mapped["CarEngine"] = relationship(back_populates="cars")
+    gearbox: Mapped["CarGearbox"] = relationship(back_populates="cars")
