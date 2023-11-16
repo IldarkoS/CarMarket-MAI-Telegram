@@ -31,5 +31,15 @@ class CarDAL:
         self.session.flush()
         return new_car
 
+    def select_cars(self, Model, id_model, id_gearbox, min_mile, max_mile, min_price, max_price):
+        return self.session.query(Model).\
+            filter(Model.id_model == id_model).\
+            filter(Model.id_gearbox == id_gearbox).\
+            filter(Model.mileage >= min_mile). \
+            filter(Model.mileage <= max_mile). \
+            filter(Model.price <= max_price). \
+            filter(Model.price >= min_price).all()
 
-
+    def select_spec_car(self, Model, id_model, price, mileage):
+        return self.session.query(Model).filter(Model.id_model == id_model).\
+            filter(Model.price == price).filter(Model.mileage == mileage).first()

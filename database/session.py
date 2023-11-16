@@ -14,4 +14,4 @@ engine = create_engine(
     echo=False
 )
 
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
