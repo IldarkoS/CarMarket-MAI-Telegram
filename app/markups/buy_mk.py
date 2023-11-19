@@ -3,7 +3,7 @@ from telebot import types
 
 class BuyMarkups:
     @staticmethod
-    def buy_start_menu(filters):
+    def buy_start_menu(filters, vars=0):
         menu = types.InlineKeyboardMarkup(row_width=1)
         not_selected = 'Не выбрано'
         # filters:
@@ -48,8 +48,8 @@ class BuyMarkups:
             text=f"Максимальная цена: {not_selected if filters.get('max_price') is None else filters['max_price']}",
             callback_data="buy_select_max_price")
         )
-        if filters.get('mark') is not None:
-            menu.add(types.InlineKeyboardButton(text="Показать варианты", callback_data="buy_show_cars"))
+        if filters.get('mark') is not None and filters.get('model') is not None:
+            menu.add(types.InlineKeyboardButton(text=f"Показать варианты: {vars} шт.", callback_data="buy_show_cars"))
         menu.add(types.InlineKeyboardButton(text="Очистить фильтры", callback_data="buy_reset_filter"))
         menu.add(types.InlineKeyboardButton(text="Назад", callback_data="buy_back_to_start"))
         return menu

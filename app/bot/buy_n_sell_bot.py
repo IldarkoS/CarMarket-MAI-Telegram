@@ -152,10 +152,22 @@ def buy_callbacks(call) -> None:
             message_id=call.message.message_id
         )
         filters[call.message.chat.id]['model'] = call.data.split('#')[1]
+        with Session.begin() as session:
+            model = CarModelDAL(session).get_model_by_name(CarModel, filters[call.message.chat.id]['model'])
+            gearbox = CarGearboxDAL(session).get_gearbox_by_type(CarGearbox, filters[call.message.chat.id]['gearbox'])
+            raw_cars = CarDAL(session).select_cars(
+                Car,
+                id_model=model.id_model,
+                id_gearbox=gearbox.id_gearbox,
+                min_mile=filters[call.message.chat.id]['min_mile'],
+                max_mile=filters[call.message.chat.id]['max_mile'],
+                min_price=filters[call.message.chat.id]['min_price'],
+                max_price=filters[call.message.chat.id]['max_price']
+            )
         bot.send_message(
             chat_id=call.message.chat.id,
             text="Выберите фильтры:",
-            reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[call.message.chat.id])
+            reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[call.message.chat.id], len(raw_cars))
         )
     if call.data.split('#')[0] == "buy_selected_gearbox":
         bot.delete_message(
@@ -163,10 +175,22 @@ def buy_callbacks(call) -> None:
             message_id=call.message.message_id
         )
         filters[call.message.chat.id]['gearbox'] = call.data.split('#')[1]
+        with Session.begin() as session:
+            model = CarModelDAL(session).get_model_by_name(CarModel, filters[call.message.chat.id]['model'])
+            gearbox = CarGearboxDAL(session).get_gearbox_by_type(CarGearbox, filters[call.message.chat.id]['gearbox'])
+            raw_cars = CarDAL(session).select_cars(
+                Car,
+                id_model=model.id_model,
+                id_gearbox=gearbox.id_gearbox,
+                min_mile=filters[call.message.chat.id]['min_mile'],
+                max_mile=filters[call.message.chat.id]['max_mile'],
+                min_price=filters[call.message.chat.id]['min_price'],
+                max_price=filters[call.message.chat.id]['max_price']
+            )
         bot.send_message(
             chat_id=call.message.chat.id,
             text="Выберите фильтры:",
-            reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[call.message.chat.id])
+            reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[call.message.chat.id], len(raw_cars))
         )
     if call.data == "buy_back_to_buy":
         bot.clear_step_handler(call.message)
@@ -226,7 +250,7 @@ def buy_callbacks(call) -> None:
         kor = pathlib.Path(__file__).parent.parent.parent
         bot.send_photo(
             chat_id=call.message.chat.id,
-            photo=open(f'{kor}\storage\{car[0].dir_photo}.jpg', 'rb'),
+            photo=open(f'{kor}/storage/{car[0].dir_photo}.jpg', 'rb'),
             caption=buy_mk.BuyTexts.buy_spec_car(car),
             reply_markup=buy_mk.BuyMarkups.buy_back_from_car()
         )
@@ -238,10 +262,22 @@ def step_enter_values(message, type_, value) -> None:
         message_id=message.message_id
     )
     filters[message.chat.id][f"{type_}_{value}"] = message.text
+    with Session.begin() as session:
+        model = CarModelDAL(session).get_model_by_name(CarModel, filters[message.chat.id]['model'])
+        gearbox = CarGearboxDAL(session).get_gearbox_by_type(CarGearbox, filters[message.chat.id]['gearbox'])
+        raw_cars = CarDAL(session).select_cars(
+            Car,
+            id_model=model.id_model,
+            id_gearbox=gearbox.id_gearbox,
+            min_mile=filters[message.chat.id]['min_mile'],
+            max_mile=filters[message.chat.id]['max_mile'],
+            min_price=filters[message.chat.id]['min_price'],
+            max_price=filters[message.chat.id]['max_price']
+        )
     bot.send_message(
         chat_id=message.chat.id,
         text="Выберите фильтры:",
-        reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[message.chat.id])
+        reply_markup=buy_mk.BuyMarkups.buy_start_menu(filters[message.chat.id], len(raw_cars))
     )
 
 
