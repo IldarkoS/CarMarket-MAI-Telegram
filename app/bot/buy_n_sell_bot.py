@@ -1,10 +1,10 @@
 import pathlib
 from telebot import TeleBot
-from telebot.types import Message, CallbackQuery, ReplyKeyboardRemove
+from telebot.types import Message, CallbackQuery, ReplyKeyboardRemove, BotCommand
 
 from app.markups import buy_mk
 from config.config import Config, load_config
-from app.markups import SellMarkups, SellMenu
+from app.markups import SellMarkups, SellMenu, commands
 from database import Session, CarDAL, CarMarkDAL, CarModelDAL, CarGearboxDAL, CarMark, CarModel, CarGearbox, Car
 
 config: Config = load_config()
@@ -12,6 +12,8 @@ config: Config = load_config()
 bot = TeleBot(config.tg_bot.token)
 
 filters: dict[int: dict[str: str]] = {}
+
+bot.set_my_commands([BotCommand(key, value) for key, value in commands.items()])
 
 @bot.message_handler(commands=['buy'])
 def buy_start(message) -> None:
